@@ -5,21 +5,21 @@ import matplotlib.pyplot as plt
 # Function to calculate herd growth
 def herd_growth(initial_herd, growth_rate, cull_rate, years):
     herd_size = [initial_herd]
-    for t in range(1, years):
+    for t in range(1, years):  # Ensure correct loop range
         new_herd = herd_size[-1] * (1 + growth_rate) - (herd_size[-1] * cull_rate)
         herd_size.append(new_herd)
     return herd_size
 
-# Function to calculate financials
+# Function to calculate financials (FIXED `net_cash_flow` length)
 def financials(initial_income, initial_expenses, growth_rate, cpi, years, boer_share):
     revenue = [initial_income]
     expenses = [initial_expenses]
-    net_cash_flow = []
+    net_cash_flow = [initial_income - initial_expenses]  # Start with an initial value
 
-    for t in range(1, years):
+    for t in range(1, years):  # Make sure loop matches `years`
         revenue.append(revenue[-1] * (1 + growth_rate) * boer_share)
         expenses.append(expenses[-1] * (1 + cpi))
-        net_cash_flow.append(revenue[-1] - expenses[-1])
+        net_cash_flow.append(revenue[-1] - expenses[-1])  # Ensure same length as years
 
     return revenue, expenses, net_cash_flow
 
@@ -43,12 +43,12 @@ def main():
     herd_size = herd_growth(initial_herd, growth_rate, cull_rate, years)
     revenue, expenses, net_cash_flow = financials(initial_income, initial_expenses, growth_rate, cpi, years, boer_share)
 
-    # Plot results
+    # Plot results (FIXED x-axis mismatch)
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(range(years), herd_size, label="Herd Size", marker="o")
-    ax.plot(range(years), revenue, label="Revenue", marker="s")
-    ax.plot(range(years), expenses, label="Expenses", marker="^")
-    ax.plot(range(years), net_cash_flow, label="Net Cash Flow", marker="x")
+    ax.plot(range(len(herd_size)), herd_size, label="Herd Size", marker="o")
+    ax.plot(range(len(revenue)), revenue, label="Revenue", marker="s")
+    ax.plot(range(len(expenses)), expenses, label="Expenses", marker="^")
+    ax.plot(range(len(net_cash_flow)), net_cash_flow, label="Net Cash Flow", marker="x")
 
     ax.set_xlabel("Years")
     ax.set_ylabel("Values")
